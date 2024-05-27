@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://user:password@database:5432/mydb?schema=public"
+    depends_on:
+      - database
+      - init
+
+  init:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: >
+      sh -c "
+      apk add --no-cache bash &&
+      npm install &&
+      npm install prisma --save-dev &&
+      npx prisma generate &&
+      until npx prisma migrate deploy; do echo 'Waiting for database...'; sleep 2; done
+      "
+    environment:
+      DATABASE_URL: "postgresql://user:password@database:5432/mydb?schema=public"
+    depends_on:
+      - database
+
+volumes:
+  pgdata:
