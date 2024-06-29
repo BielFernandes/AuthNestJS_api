@@ -22,7 +22,7 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime
 
-  salesperson Salesperson?
+  seller Seller?
   shop Shop?
   cart Cart?
   order Order?
@@ -36,16 +36,16 @@ model Product {
   description String
   discount Int
   image String
-  salesperson_id Int
+  seller_id Int
   created_at DateTime @default(now())
   updated_at DateTime
 
-  salesperson SalespersonShop @relation(fields: [salesperson_id], references: [id])
+  seller SellerShop @relation(fields: [seller_id], references: [id])
   products_cart CartProduct[]
   products_order OrderProduct[]
 }
 
-model Salesperson {
+model Seller {
   id Int @id @default(autoincrement())
   sale_quantity Int
   user_id Int @unique
@@ -61,12 +61,12 @@ model Shop {
   user_id Int @unique 
   user User @relation(fields: [user_id], references: [id])
 
-  salespersonshops SalespersonShop[]
+  sellershops SellerShop[]
 }
 
-model SalespersonShop {
+model SellerShop {
   id Int @id @default(autoincrement())
-  salesperson_id Int @unique
+  seller_id Int @unique
   shop_id Int @unique
   admission_date DateTime @default(now())
   demission_date DateTime
