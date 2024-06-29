@@ -19,13 +19,106 @@ model User {
   email String @unique
   full_name String
   password String
-  posts Post[]
+  created_at DateTime @default(now())
+  updated_at DateTime
+
+  salesperson Salesperson?
+  shop Shop?
+  cart Cart?
+  order Order?
 }
 
-model Post {
+model Product {
   id Int @id @default(autoincrement())
-  title String
-  content String
-  userId Int
-  user User @relation(fields: [userId], references: [id])
+  name String
+  price Float
+  quantity Int
+  description String
+  discount Int
+  image String
+  salesperson_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime
+
+  salesperson SalespersonShop @relation(fields: [salesperson_id], references: [id])
+  products_cart CartProduct[]
+  products_order OrderProduct[]
+}
+
+model Salesperson {
+  id Int @id @default(autoincrement())
+  sale_quantity Int
+  user_id Int @unique
+  user User @relation(fields: [user_id], references: [id])
+  location String
+  created_at DateTime @default(now())
+  updated_at DateTime
+}
+
+model Shop {
+  id Int @id @default(autoincrement())
+  name String
+  user_id Int @unique 
+  user User @relation(fields: [user_id], references: [id])
+
+  salespersonshops SalespersonShop[]
+}
+
+model SalespersonShop {
+  id Int @id @default(autoincrement())
+  salesperson_id Int @unique
+  shop_id Int @unique
+  admission_date DateTime @default(now())
+  demission_date DateTime
+
+  products Product[]
+
+  shop Shop @relation(fields: [shop_id], references: [id])
+  
+}
+
+model Cart {
+  id Int @id @default(autoincrement())
+  user_id Int @unique
+  total Float
+
+  user User @relation(fields: [user_id], references: [id])
+  products_cart CartProduct[]
+}
+
+model CartProduct {
+  id Int @id @default(autoincrement())
+  product_id Int
+  quantity Int
+  cart_id Int
+  value Float
+  
+  cart Cart @relation(fields: [cart_id], references: [id])
+  product Product @relation(fields: [product_id], references: [id])
+  
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  status OrderStatus 
+  user_id Int @unique
+  delivery_date DateTime
+  value Float
+
+  user User @relation(fields: [user_id], references: [id])
+  products OrderProduct[]
+}
+
+model OrderProduct {
+  id Int @id @default(autoincrement())
+  order_id Int
+  product_id Int 
+  quantity Int
+
+  order Order @relation(fields: [order_id], references: [id])
+  product Product @relation(fields: [product_id], references: [id])
+}
+
+enum OrderStatus {
+  AWAITING_PAYMENT
 }
