@@ -1,17 +1,18 @@
 import {
   Controller,
-  Request,
   Post,
   UseGuards,
   Get,
   Res,
   Body,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { LoginRequestDto } from './dto/requests.dto';
 import { Response } from 'express';
 import { RegisterUserDto } from './dto/registerUserDto.dto';
+import { AuthGuard } from './auth.guard';
+import { CurrentUser } from './user.decorator';
+import { CurrentUserDto } from 'src/dto/currentUserDto';
 
 @Controller('auth')
 export class AuthController {
@@ -42,9 +43,9 @@ export class AuthController {
     res.status(200).json({ ...user, password: undefined });
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard)
   @Get('me')
-  getProfile(@Request() req) {
-    return req.user;
+  getProfile(@CurrentUser() currentUser: CurrentUserDto) {
+    return currentUser;
   }
 }
