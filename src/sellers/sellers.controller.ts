@@ -20,7 +20,7 @@ export class SellersController {
   @UseGuards(AuthGuard)
   @Get()
   find(@CurrentUser() currentUser: CurrentUserDto) {
-    return this.sellersService.find(currentUser);
+    return this.sellersService.findOne(currentUser);
   }
 
   @Patch(':id')

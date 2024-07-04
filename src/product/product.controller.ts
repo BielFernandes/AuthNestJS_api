@@ -18,24 +18,24 @@ import { CreateProductDto } from './dto/create-product.dto';
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
-
-  @UseGuards(AuthGuard)
-  @Post()
-  create(@CurrentUser() currentUser: CurrentUserDto, @Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto, currentUser);
-  }
-
+  
   @UseGuards(AuthGuard)
   @Get()
   findAll(@CurrentUser() currentUser: CurrentUserDto) {
     return this.productService.findAll(currentUser.id);
   }
-
+  
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.productService.findOne(id);
   }
-
+  
+  @UseGuards(AuthGuard)
+  @Post()
+  create(@CurrentUser() currentUser: CurrentUserDto, @Body() createProductDto: CreateProductDto) {
+    return this.productService.create(createProductDto, currentUser);
+  }
+  
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDto) {
     return this.productService.update(id, updateProductDto);

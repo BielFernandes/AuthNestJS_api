@@ -7,7 +7,6 @@ export class ProductService {
   constructor(private prisma: PrismaService) {}
 
   create(createProductDto, user) {
-    console.log(createProductDto)
     const query = this.prisma.product.create({
       data: {
         ...createProductDto,
