@@ -6,10 +6,22 @@ import { AuthModule } from './auth/auth.module';
 import { OrderController } from './order/order.controller';
 import { OrderModule } from './order/order.module';
 import { ConfigModule } from '@nestjs/config';
+import { ProductModule } from './product/product.module';
+import { SellersModule } from './sellers/sellers.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, OrderModule, ConfigModule],
-  controllers: [AppController, OrderController],
+  imports: [
+    AuthModule,
+    UsersModule,
+    OrderModule,
+    ConfigModule,
+    ProductModule,
+    SellersModule,
+  ],
+  controllers: [
+    AppController,
+    OrderController
+  ],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
